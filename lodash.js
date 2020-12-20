@@ -68,22 +68,15 @@ let lodash = {
 		if ( num === 0 ) return array;
 		return array.slice(0,-num)
 	},
-	fill(array,value,start = 0, end = array.length) {
-		return array.fill(value,start,end);
-	}
+	fill(array, value, start = 0, end = array.length) {
+		let resultArray = [...array];
+		for ( let i = start ; i < end ; i++ ) {
+			resultArray[i] = value
+		}
+		return resultArray	
+	},
+	
 }
-
-// console.log(lodash.fill([4, 6, 8, 10], '*', 1, 3));
-// => [4, '*', '*', 10]
-
-
-
-
-
-
-
-
-
 
 
 
