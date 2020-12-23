@@ -75,10 +75,30 @@ let lodash = {
 		}
 		return resultArray	
 	},
-	
+	findIndex(array, param) {
+		if ( typeof param === 'function' ) {
+			return array.indexOf(array.filter(param)[0])
+		}
+		else if ( typeof param === 'object' ) {
+			if ( !Array.isArray(param) ) {
+			return array.findIndex( el => el.user === param.user && el.active === param.active)
+			} 
+			else if ( Array.isArray(param) ) {
+				if ( param.length === 2 ) {
+					return array.findIndex( el => el[param[0]] === param[1])
+				}
+			}
+		}
+		else if ( typeof param === 'string' ) {
+			for ( let obj of array ) {
+				for ( let key in obj ) {
+					if ( key === param || obj[key] === param ) {
+						if ( typeof obj[key] === 'boolean' ) return array.findIndex(el => el[param] === true)
+							else return array.indexOf(obj)
+						}
+					}
+				}
+			}
+	}	
 }
-
-
-
-
 
