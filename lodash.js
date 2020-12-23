@@ -99,6 +99,23 @@ let lodash = {
 					}
 				}
 			}
-	}	
+	},
+	flatten(array) {
+		return [].concat.apply([],array)
+	},
+	flattenDeep(array) {
+		return array.flat(Infinity)
+	},
+	flattenDepth(array, depth = 1) {
+		return array.flat(depth)
+	},
+	fromPairs(array) {
+		let map = new Map();
+		for ( let arr of array ) {
+			map.set(arr[0],arr[1])
+		}
+		return Object.fromEntries(map)
+	}
 }
+
 
