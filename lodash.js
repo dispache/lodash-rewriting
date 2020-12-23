@@ -115,7 +115,13 @@ let lodash = {
 			map.set(arr[0],arr[1])
 		}
 		return Object.fromEntries(map)
-	}
+	},
+	head(array) {
+		return array[0]
+	},
+	indexOf(array,value,fromIndex = 0) {
+		return array.indexOf(value,fromIndex)
+	},
+	
 }
-
 
