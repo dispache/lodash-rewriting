@@ -122,6 +122,12 @@ let lodash = {
 	indexOf(array,value,fromIndex = 0) {
 		return array.indexOf(value,fromIndex)
 	},
-	
+	initial(array) {
+		return array.slice(0,array.length-1)
+	},
+	intersection(...args) {
+		
+	},
 }
 
+lodash.intersection([1,2,3], [4,5,6,2])
