@@ -126,8 +126,18 @@ let lodash = {
 		return array.slice(0,array.length-1)
 	},
 	intersection(...args) {
-		
+		let resultArray = [];
+		for ( let x = 0 ; x < args[0].length; x++ ) {
+			if ( args.every( el => el.includes(args[0][x]) ) ) {
+				resultArray.push(args[0][x]);
+			}
+		}
+		return resultArray;
 	},
 }
 
-lodash.intersection([1,2,3], [4,5,6,2])
+lodash.intersection([1,2], [4,5,3,10,6,2], [7,6,3,2,10])
+
+
+
+// [1,2,3] ==> 2
