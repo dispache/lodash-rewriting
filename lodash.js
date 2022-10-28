@@ -137,10 +137,30 @@ let lodash = {
 	join(...args) {
 		let separator = args.pop();
 		return args[0].join(separator);
-	},	
+	},
+	last(array) {
+		return array[array.length-1];
+	},
+	lastIndexOf(array, value, fromIndex = array.length-1) {
+		return array.lastIndexOf(value, fromIndex);
+	},
+	nth(array, n = 0) {
+		if ( n >= 0 ) {
+			return array[n];
+		}
+		return array[array.length+n];
+	},
+	pull(array, ...args) {
+		let hash = {};
+		for ( let i = 0 ; i < args.length ; i++ ) {
+			hash[args[i]] === 1 ? hash[args[i]] += 1 : hash[args[i]] = 1; 
+		};
+		let idx = 0;
+		while ( idx < array.length ) {
+			if ( hash[array[idx]] === 1 ) {
+				array.splice(idx, 1);
+				idx = 0;
+			} else idx++;
+		}
+	} 
 };
-
-console.log(lodash.join(['a', 'b', 'c'], '$'));
-
-// console.log(lodash.intersectionBy([1.2, 2.1], [2.3, 3.4], [4.5, 8.1, 2,2, 1,8], Math.floor));
-// console.log(lodash.intersectionBy([{ 'x': 1 }], [{ 'x': 2 }, { 'x': 1 }], 'x')); 
