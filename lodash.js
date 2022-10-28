@@ -134,10 +134,13 @@ let lodash = {
 		}
 		return resultArray;
 	},
-}
+	join(...args) {
+		let separator = args.pop();
+		return args[0].join(separator);
+	},	
+};
 
-lodash.intersection([1,2], [4,5,3,10,6,2], [7,6,3,2,10])
+console.log(lodash.join(['a', 'b', 'c'], '$'));
 
-
-
-// [1,2,3] ==> 2
+// console.log(lodash.intersectionBy([1.2, 2.1], [2.3, 3.4], [4.5, 8.1, 2,2, 1,8], Math.floor));
+// console.log(lodash.intersectionBy([{ 'x': 1 }], [{ 'x': 2 }, { 'x': 1 }], 'x')); 
