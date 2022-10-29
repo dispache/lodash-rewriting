@@ -162,5 +162,24 @@ let lodash = {
 				idx = 0;
 			} else idx++;
 		}
-	} 
+	},
+	pullAll(array, args) {
+		this.pull(array, ...args);
+	},
+	pullAllBy(array, values, iteratee) {
+		let hashOfValues = {};
+		let temp;
+		for ( let i = 0 ; i < values.length ; i++ ) {
+			temp = values[i][iteratee];
+			if ( temp ) {
+				hashOfValues[temp] = true;
+			}	
+		};
+		let keys = Object.keys(hashOfValues).map( item => +item);
+		for ( let i = 0 ; i < array.length ; i++ ) {
+			if ( hashOfValues[array[i][iteratee]] && keys.includes(array[i][iteratee]) ) {
+				array.splice(i--,1);
+			}
+		}
+	}
 };
