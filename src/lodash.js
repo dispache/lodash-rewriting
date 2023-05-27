@@ -71,7 +71,7 @@ const lodash = {
 	},
 	dropRight(array, num = 1) {
 		if ( num === 0 ) return array;
-		return array.slice(0,-num)
+		return array.slice(0,-num);
 	},
 	fill(array, value, start = 0, end = array.length) {
 		let resultArray = [...array];
