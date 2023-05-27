@@ -1,0 +1,22 @@
+{
+  "name": "lodash-rewriting",
+  "version": "1.0.0",
+  "description": "Rewriting of Lodash library",
+  "main": "lodash.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dispache/lodash-rewriting.git"
+  },
+  "author": "Evgeniy Digtyarenko (e.digtyarenko3@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dispache/lodash-rewriting/issues"
+  },
+  "homepage": "https://github.com/dispache/lodash-rewriting#readme",
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
