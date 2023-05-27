@@ -181,5 +181,38 @@ let lodash = {
 				array.splice(i--,1);
 			}
 		}
+	},
+	pullAt(array, indexes) {
+		let removedItems = [];
+		let removedItem;
+		switch (typeof indexes) {
+			case 'number': {
+				removedItem = array.splice(indexes,1)[0];
+				removedItems.push(removedItem);
+				break;
+			}
+			case 'object': {
+				let start = 0;
+				while ( start < indexes.length ) {
+					removedItem = array.splice(indexes[start],1)[0];
+					removedItems.push(removedItem);
+					indexes = indexes.map( item => item -= 1); 
+					start++;
+				}
+				break;
+			}
+		}
+		return removedItems; 
+	},
+	remove(array, predicate) {
+		return array.filter((value, index, array) => {
+			let truthyValue = predicate(value);
+			if ( truthyValue ) {
+				array.splice(index,1);
+				return true;
+			} else {
+				return false;
+			}
+		});
 	}
 };
