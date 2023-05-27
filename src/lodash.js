@@ -1,30 +1,23 @@
-let lodash = {
-	chunk1(array,size) {
+import utils from "./utils.js";
+
+const lodash = {
+	chunk(array,size) {
 		let resultArray = [];
-		let firstArray = [];
-		let secondArray = [];
-		for (let x=0;x<size;x++) {
-			firstArray.push(array[x]);
-		} 
-		for ( let y=size;y<array.length;y++ ) {
-			secondArray.push(array[y]);
+		let index = 0;
+		while ( index < array.length ) {
+			resultArray.push(array.slice(index, index + size));
+			index += size; 
 		}
-		resultArray.push(firstArray,secondArray);
 		return resultArray;
 	},
-	chunk2(array,size) {
-		let firstArray = array.filter((elem,index) => {
-			return index<size;
-		});
-		let secondArray = array.filter((elem,index) => {
-			return index==size || (index>size && index<array.length);
-		})
-		return [firstArray,secondArray];
-	},
 	compact(array) {
-		return array.filter(el => {
-			 return el != false 
-		})
+		const resultArray = [];
+		for ( let value of array ) {
+			if ( value ) {
+				resultArray.push(value);
+			}
+		}
+		return resultArray;
 	},
 	concat(...arg) {
 		let resultArray = [];
@@ -39,27 +32,36 @@ let lodash = {
 		return resultArray;
 	},
 	difference(...arg) {
-		let resultArray = arg[0];
-		for ( let x=1;x<arg.length;x++ ) {
-			for ( let y in arg[x] ) {
-				let index = arg[0].indexOf(arg[x][y])
-				if (arg[0].includes(arg[x][y])) {
-					arg[0].splice(index,1);
-				} 
-			}
-		}
-		return resultArray;
+		const map = new Map();
+		for ( let i = 1; i < arg.length ; i++ ) {
+			for ( let value of arg[i] ) {
+				map.set(value, true);
+			};
+		};
+		const result = [];
+		for ( let value of arg[0] ) {
+			if ( !map.has(value) ) {
+				result.push(value);
+			};
+		};
+		return result;
 	},
 	differenceBy(...arg) {
-		let resultArray = []
-		if ( typeof arg[arg.length - 1] == 'function' ) {
-			for ( let x=0;x<=arg.length-2;x++ ) {
-				for ( let y of arg[x] ) {
-					resultArray = arg[arg.length-1].call(null,y);
-				}
-			}
-		} 
-	return resultArray;
+		const map = new Map();
+		let fn = arg.at(-1);
+		if ( typeof fn !== 'function' ) {
+			fn = utils.property(fn);
+		};
+		for ( let value of arg[1] ) {
+			map.set(fn(value), true);
+		};
+		const result = [];
+		for ( let value of arg[0] ) {
+			if ( !map.has(fn(value)) ) {
+				result.push(value);
+			};
+		};
+		return result;
 	},
 	drop(array, num = 1) {
 		return array.slice(num);
@@ -216,3 +218,5 @@ let lodash = {
 		});
 	}
 };
+
+export default lodash;
