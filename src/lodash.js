@@ -2,6 +2,9 @@ import utils from "./utils.js";
 
 const lodash = {
 	chunk(array,size) {
+		if ( size <= 0 ) {
+			return [];
+		}
 		let resultArray = [];
 		let index = 0;
 		while ( index < array.length ) {
