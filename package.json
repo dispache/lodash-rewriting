@@ -5,7 +5,7 @@
   "main": "lodash.js",
   "type": "module",
   "scripts": {
-    "test": "jest ./src/lodash.test.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./src/lodash.test.js"
   },
   "repository": {
     "type": "git",
