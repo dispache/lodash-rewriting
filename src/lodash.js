@@ -63,47 +63,57 @@ const lodash = {
 		};
 		return result;
 	},
+	differenceWith(array, values, comparator) {
+		const map = new Map();
+		const result = [];
+		for ( let value of values ) {
+			for ( let i = 0 ; i < array.length ; i++ ) {
+				const value1 = array[i];
+				const comparingResult = comparator(value, value1);
+				if ( comparingResult ) {
+					map.set(i, true);
+				};
+			};
+		};
+		for ( let i = 0 ; i < array.length ; i++ ) {
+			if ( !map.has(i) ) {
+				result.push(array[i]);
+			}
+		};
+		return result;
+	},
 	drop(array, num = 1) {
 		return array.slice(num);
 	},
 	dropRight(array, num = 1) {
 		if ( num === 0 ) return array;
-		return array.slice(0,-num)
+		return array.slice(0,-num);
 	},
 	fill(array, value, start = 0, end = array.length) {
-		let resultArray = [...array];
-		for ( let i = start ; i < end ; i++ ) {
-			resultArray[i] = value
-		}
-		return resultArray	
+		while ( start < end ) {
+			array[start++] = value;
+		};
 	},
 	findIndex(array, param) {
 		if ( typeof param === 'function' ) {
-			return array.indexOf(array.filter(param)[0])
+			return array.indexOf(array.filter(param)[0]);
 		}
 		else if ( typeof param === 'object' ) {
 			if ( !Array.isArray(param) ) {
-			return array.findIndex( el => el.user === param.user && el.active === param.active)
+				return array.findIndex( el => utils.isEqualObjects(el, param) );
 			} 
 			else if ( Array.isArray(param) ) {
 				if ( param.length === 2 ) {
-					return array.findIndex( el => el[param[0]] === param[1])
+					return array.findIndex( el => el[param[0]] === param[1]);
 				}
 			}
 		}
 		else if ( typeof param === 'string' ) {
-			for ( let obj of array ) {
-				for ( let key in obj ) {
-					if ( key === param || obj[key] === param ) {
-						if ( typeof obj[key] === 'boolean' ) return array.findIndex(el => el[param] === true)
-							else return array.indexOf(obj)
-						}
-					}
-				}
-			}
+			return array.findIndex( el => el[param] ? el : false);
+		}
 	},
 	flatten(array) {
-		return [].concat.apply([],array)
+		return [].concat.apply([],array);
 	},
 	flattenDeep(array) {
 		return array.flat(Infinity)
@@ -112,11 +122,11 @@ const lodash = {
 		return array.flat(depth)
 	},
 	fromPairs(array) {
-		let map = new Map();
+		let result = {};
 		for ( let arr of array ) {
-			map.set(arr[0],arr[1])
-		}
-		return Object.fromEntries(map)
+			result[arr[0]] = arr[1];
+		};
+		return result;
 	},
 	head(array) {
 		return array[0]
@@ -125,7 +135,7 @@ const lodash = {
 		return array.indexOf(value,fromIndex)
 	},
 	initial(array) {
-		return array.slice(0,array.length-1)
+		return array.slice(0,array.length-1);
 	},
 	intersection(...args) {
 		let resultArray = [];
