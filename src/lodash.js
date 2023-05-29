@@ -202,9 +202,8 @@ const lodash = {
 		};
 		return result;
 	},
-	join(...args) {
-		let separator = args.pop();
-		return args[0].join(separator);
+	join(array, separator = ",") {
+		return array.join(separator);
 	},
 	last(array) {
 		return array[array.length-1];
@@ -219,69 +218,81 @@ const lodash = {
 		return array[array.length+n];
 	},
 	pull(array, ...args) {
-		let hash = {};
-		for ( let i = 0 ; i < args.length ; i++ ) {
-			hash[args[i]] === 1 ? hash[args[i]] += 1 : hash[args[i]] = 1; 
-		};
-		let idx = 0;
-		while ( idx < array.length ) {
-			if ( hash[array[idx]] === 1 ) {
-				array.splice(idx, 1);
-				idx = 0;
-			} else idx++;
+		for ( let value of args ) {
+			let idx = 0;
+			while ( idx < array.length ) {
+				if ( array[idx] === value ) {
+					array.splice(idx, 1);
+				} else {
+					idx++;
+				}
+			}
 		}
 	},
 	pullAll(array, args) {
 		this.pull(array, ...args);
 	},
 	pullAllBy(array, values, iteratee) {
-		let hashOfValues = {};
-		let temp;
-		for ( let i = 0 ; i < values.length ; i++ ) {
-			temp = values[i][iteratee];
-			if ( temp ) {
-				hashOfValues[temp] = true;
-			}	
-		};
-		let keys = Object.keys(hashOfValues).map( item => +item);
-		for ( let i = 0 ; i < array.length ; i++ ) {
-			if ( hashOfValues[array[i][iteratee]] && keys.includes(array[i][iteratee]) ) {
-				array.splice(i--,1);
+		for ( let value of values ) {
+			if ( value.hasOwnProperty(iteratee) ) {
+				let idx = 0;
+				while ( idx < array.length ) {
+					const curr = array[idx];
+					if ( curr.hasOwnProperty(iteratee) && curr[iteratee] === value[iteratee] ) {
+						array.splice(idx, 1);
+					} else {
+						idx++;
+					}
+				}
 			}
 		}
 	},
-	pullAt(array, indexes) {
-		let removedItems = [];
-		let removedItem;
-		switch (typeof indexes) {
-			case 'number': {
-				removedItem = array.splice(indexes,1)[0];
-				removedItems.push(removedItem);
-				break;
-			}
-			case 'object': {
-				let start = 0;
-				while ( start < indexes.length ) {
-					removedItem = array.splice(indexes[start],1)[0];
-					removedItems.push(removedItem);
-					indexes = indexes.map( item => item -= 1); 
-					start++;
+	pullAllWith(array, values, comparator) {
+		for ( let value of values ) {
+			let idx = 0;
+			while ( idx < array.length ) {
+				const comparingResult = comparator(value, array[idx]);
+				if ( comparingResult ) {
+					array.splice(idx, 1);
+				} else {
+					idx++;
 				}
-				break;
 			}
 		}
-		return removedItems; 
+	},
+	pullAt(array, ...indexes) {
+		const result = [];
+		if ( typeof indexes[0] === 'object' ) {
+			indexes = [...indexes[0]];
+		}
+		for ( let value of indexes ) {
+			const removed = array[value];
+			array[value] = null;
+			result.push(removed);
+		}
+		let idx = 0;
+		while ( idx < array.length ) {
+			if ( array[idx] === null ) {
+				array.splice(idx, 1);
+			} else {
+				idx++;
+			}
+		}
+		return result;
 	},
 	remove(array, predicate) {
-		return array.filter((value, index, array) => {
-			let truthyValue = predicate(value);
-			if ( truthyValue ) {
-				array.splice(index,1);
-				return true;
+		const result = [];
+		let idx = 0;
+		while ( idx < array.length ) {
+			const predicateResult = predicate(array[idx]);
+			if ( predicateResult ) {
+				result.push(array[idx]);
+				array.splice(idx, 1);
 			} else {
-				return false;
+				idx++;
 			}
-		});
+		}
+		return result;
 	}
 };
 
