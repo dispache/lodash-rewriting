@@ -149,6 +149,59 @@ const lodash = {
 		}
 		return resultArray;
 	},
+	intersectionBy(...args) {
+		let iteratee = args.at(-1);
+		const result = [];
+		const map = new Map();
+		if ( typeof iteratee === "string" ) {
+			iteratee = utils.property(iteratee);
+			for ( let i = 1 ; i < args.length - 1 ; i++ ) {
+				for ( let obj of args[i] ) {
+					if ( obj.hasOwnProperty(args.at(-1)) ) {
+						map.set(iteratee(obj), true);
+					};
+				};
+			};
+			for ( let value of args[0] ) {
+				if ( value.hasOwnProperty(args.at(-1)) ) {
+					if ( map.has(iteratee(value)) ) {
+						result.push(value);
+					}
+				}
+			}
+		} else if ( typeof iteratee === "function" ) {
+			for ( let i = 1 ; i < args.length - 1 ; i++ ) {
+				for ( let value of args[i] ) {
+					map.set(iteratee(value));
+				};
+			};
+			for ( let value of args[0] ) {
+				if ( map.has(iteratee(value)) ) {
+					result.push(value);
+				} 
+			}
+		}
+		return result;
+	},
+	intersectionWith(array, values, comparator) {
+		const map = new Map();
+		const result = [];
+		for ( let value of values ) {
+			for ( let i = 0 ; i < array.length ; i++ ) {
+				const value1 = array[i];
+				const comparingResult = comparator(value, value1);
+				if ( comparingResult ) {
+					map.set(i, true);
+				};
+			};
+		};
+		for ( let i = 0 ; i < array.length ; i++ ) {
+			if ( map.has(i) ) {
+				result.push(array[i]);
+			}
+		};
+		return result;
+	},
 	join(...args) {
 		let separator = args.pop();
 		return args[0].join(separator);
