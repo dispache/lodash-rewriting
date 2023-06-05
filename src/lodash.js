@@ -92,28 +92,26 @@ const lodash = {
 		if ( num === 0 ) return array;
 		return array.slice(0,-num);
 	},
+	dropRightWhile(array, predicate) {
+		const slicedIdx = utils.dropWhileByStartOrEnd(array, predicate, Array.prototype.findLastIndex);
+		return slicedIdx > -1
+				? array.slice(0, slicedIdx + 1)
+				: []
+	},
+	dropWhile(array, predicate) {
+		const slicedIdx = utils.dropWhileByStartOrEnd(array, predicate, Array.prototype.findIndex);
+		return slicedIdx > -1 ? array.slice(slicedIdx) : [];
+	},
 	fill(array, value, start = 0, end = array.length) {
 		while ( start < end ) {
 			array[start++] = value;
 		};
 	},
-	findIndex(array, param) {
-		if ( typeof param === 'function' ) {
-			return array.indexOf(array.filter(param)[0]);
-		}
-		else if ( typeof param === 'object' ) {
-			if ( !Array.isArray(param) ) {
-				return array.findIndex( el => utils.isEqualObjects(el, param) );
-			} 
-			else if ( Array.isArray(param) ) {
-				if ( param.length === 2 ) {
-					return array.findIndex( el => el[param[0]] === param[1]);
-				}
-			}
-		}
-		else if ( typeof param === 'string' ) {
-			return array.findIndex( el => el[param] ? el : false);
-		}
+	findIndex(array, predicate, fromIndex = 0) {
+		return utils.findFirstOrLastIndex(array, predicate, true, fromIndex);
+	},
+	findLastIndex(array, predicate, fromIndex = array.length - 1) {
+		return utils.findFirstOrLastIndex(array, predicate, false, fromIndex);
 	},
 	flatten(array) {
 		return [].concat.apply([],array);
