@@ -168,4 +168,104 @@ describe("testing of lodash.dropRight method", () => {
 
 });
 
+describe("testing of lodash.dropRightWhile method", () => {
+
+    test(
+        `test should return an empty array because predicate returns true for each element in array (age property is greater
+            than 18 in each object)`, 
+        () => {
+            const input = [
+                {
+                    name: "Richard",
+                    age: 21
+                },
+                {
+                    name: "Mary",
+                    age: 25
+                },
+                {
+                    name: "Patrik",
+                    age: 32
+                }
+            ];
+            const predicate = (obj) => obj.age > 18;
+            const output = lodash.dropRightWhile(input, predicate);
+            const expected = [];
+            expect(output).toEqual(expected);
+    });
+
+    test(
+        `test should return the first two elements of array when the length of array is 4 because 
+            the last two elements will be excluded`,
+        () => {
+            const input = [
+                { user: 'Logan', active: true },
+                { user: 'Nancy', active: false },
+                { user: 'Matthew', active: true },
+                { user: 'George', active: true }
+            ];
+            const predicate = ["active", true];
+            const output = lodash.dropRightWhile(input, predicate);
+            const expected = input.slice(0, 2);
+            expect(output).toEqual(expected);
+    });
+
+});
+
+describe("testing of lodash.dropWhile method", () => {
+
+    test(
+        `test should return the same array as the input array because of 
+            predicate will return true for each element in the array`, 
+        () => {
+            const input = [
+                { count: 5 },
+                { count: 10 },
+                { count: 15 }
+            ];
+            const predicate = (obj) => obj.count % 5 !== 0;
+            const output = lodash.dropWhile(input, predicate);
+            const expected = [...input];
+            expect(output).toEqual(expected);
+    });
+
+    test(`test should return an array only with the last element of the input array`, () => {
+        const input = [
+            { name: "Charley", active: true },
+            { name: "Stacey", active: true },
+            { name: "Marco", active: false }
+        ];
+        const predicate = "active";
+        const output = lodash.dropWhile(input, predicate);
+        const expected = [{...input[2]}];
+        expect(output).toEqual(expected);
+    });
+
+});
+
+describe("testing of lodash.fill method", () => {
+
+    test(
+        `Test should mutate the input array, the last element should be the sign of '$'.
+            The start argument is equal to input.length - 1, the end argument is not passed`, () => {
+        const input = [1,2,3,4,5];
+        lodash.fill(input, "$", input.length - 1);
+        const expected = [1,2,3,4,'$'];
+        expect(input).toEqual(expected);
+    });
+
+    test(`Test should fill the input array with the sign of '*' from the first element to the last because of the start and
+            end arguments are not passed`, () => {
+        const input = [100,200,300,400,500,600];
+        lodash.fill(input, "*");
+        const expected = new Array(input.length);
+        for ( let i = 0 ; i < expected.length ; i++ ) {
+            expected[i] = '*';
+        };
+        expect(input).toEqual(expected);
+    });
+
+});
+
+
 
