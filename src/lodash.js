@@ -291,6 +291,112 @@ const lodash = {
 			}
 		}
 		return result;
+	},
+	reverse(array) {
+		if ( array.length <= 1 ) return array;
+		let left = 0;
+		let right = array.length - 1;
+		while ( left < right ) {
+			let temp = array[right];
+			array[right--] = array[left];
+			array[left++] = temp;
+		}
+		return array;
+	},
+	slice(array, start = 0, end = array.length) {
+		const result = new Array(end-start);
+		let pointer = 0;
+		while ( start < end ) {
+			result[pointer++] = array[start++];
+		}
+		return result;
+	},
+	sortedIndex(array, value) {
+		if ( value < array[0] || array.length === 0 ) {
+			return 0;
+		} else if ( value > array.at(-1) ) {
+			return array.length;
+		}
+		let start = 0;
+		let end = array.length-1;
+		let middleIdx;
+		while ( start <= end ) {
+			middleIdx = Math.floor((start+end)/2);
+			if ( value === array[middleIdx] ) {
+				return middleIdx;
+			} else if ( value < array[middleIdx] ) {
+				if ( value > array[middleIdx-1] ) {
+					return middleIdx;
+				} else {
+					end = middleIdx;
+				}
+			} else {
+				if ( value < array[middleIdx+1] ) {
+					return middleIdx+1;
+				} else {
+					start = middleIdx;
+				}
+			}
+		}
+	},
+	sortedIndexBy(array, value, iteratee) {
+		if ( typeof iteratee === 'string' ) {
+			const key = iteratee;
+			iteratee = utils.property(key);
+		}
+		if ( array.length === 0 || iteratee(value) < iteratee(array[0]) ) {
+			return 0;
+		} else if ( iteratee(value) > iteratee(array.at(-1)) ) {
+			return array.length;
+		}
+		let start = 0;
+		let end = array.length-1;
+		let middleIdx, currValue, nextValue, prevValue, middleValue;
+		while ( start <= end ) {
+			middleIdx = Math.floor((start+end)/2);
+			middleValue = iteratee(array[middleIdx]);
+			currValue = iteratee(value);
+			nextValue = iteratee(array[middleIdx+1] || []);
+			prevValue = iteratee(array[middleIdx-1] || []);
+			if ( currValue === middleValue ) {
+				return middleIdx;
+			} else if ( currValue < middleValue ) {
+				if ( currValue > prevValue ) {
+					return middleIdx;
+				} else {
+					end = middleIdx;
+				}
+			} else {
+				if ( currValue < nextValue ) {
+					return middleIdx+1;
+				} else {
+					start = middleIdx;
+				}
+			}
+		}
+	},
+	sortedIndexOf(array, value) {
+		if ( array.length === 0 ) {
+			return -1;
+		}
+		let middleIdx;
+		let start = 0;
+		let end = array.length-1;
+		while ( start <= end ) {
+			middleIdx = Math.floor((start+end)/2);
+			if ( value === array[middleIdx] ) {
+				if ( value === array[middleIdx-1] ) {
+					end = middleIdx-1;
+				} else {
+					return middleIdx;
+				}
+			} else if ( value < array[middleIdx] ) {
+				end = middleIdx-1;
+			} else if ( value > array[middleIdx] ) {
+				start = middleIdx+1;
+			}
+		}
+		return -1;	
 	}
 };
 
