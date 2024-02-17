@@ -397,6 +397,79 @@ const lodash = {
 			}
 		}
 		return -1;	
+	},
+	sortedUniq(array) {
+		const sorted = array.sort();
+		return [...new Set(sorted)];
+	},
+	sortedUniqBy(array, iteratee) {
+		const set = new Set();
+		const comparable = new Set();
+		for ( let i = 0 ; i < array.length ; i++ ) {
+			const value = iteratee(array[i]);
+			if ( !comparable.has(value) ) {
+				set.add(array[i]);
+				comparable.add(value);
+			}
+		}
+		return [...set];
+	},
+	tail(array) {
+		return array.slice(1);
+	},
+	take(array, n=1) {
+		if ( n < 0 ) {
+			return [];
+		}
+		return array.slice(0, n);
+	},
+	takeRight(array, n=1) {
+		if ( n < 0 ) {
+			return [];
+		}
+		const from = array.length-n;
+		return array.slice(from < 0 ? 0 : array.length-n);
+	},
+	union(...arrays) {
+		const set = new Set();
+		for ( let array of arrays ) {
+			for (let value of array) {
+				set.add(value);
+			}
+		}
+		return [...set];
+	},
+	uniq(array) {
+		const set = new Set();
+		for (let value of array) {
+			set.add(value);
+		}
+		return [...set];
+	},
+	unzip(array) {
+		const result = [];
+		const resultLength = array[0].length;
+		for (let i = 0; i < resultLength; i++) {
+			const current = [];
+			for (let value of array) {
+				current.push(value[i]);
+			}
+			result.push(current);
+		}
+		return result;
+	},
+	unzipWith(array,iteratee) {
+		const result = [];
+		const resultLength = array[0].length;
+		for (let i = 0; i < resultLength; i++) {
+			const current = [];
+			for (let value of array) {
+				current.push(value[i]);
+			}
+			const resultValue = iteratee(...current);
+			result.push(resultValue);
+		}
+		return result;
 	}
 };
 
