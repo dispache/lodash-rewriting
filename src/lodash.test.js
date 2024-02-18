@@ -96,16 +96,17 @@ describe("testing of lodash.difference method", () => {
 
 describe("testing of lodash.differenceBy method", () => {
 
-    test(`
-            test should to apply function Math.floor (the last argument passed into method) 
-            to every element in the first and second arrays and return an array that does not contain elements from second array`, 
-            () => {
-                const input = [1.2, 4.4, 3.3];
-                const exclude = [4.2, 3.1];
-                const fn = Math.floor;
-                const output = lodash.differenceBy(input, exclude, fn);
-                const expected = [1.2];
-                expect(output).toEqual(expected);
+    test(
+        `test should to apply function Math.floor (the last argument passed into method) 
+        to every element in the first and second arrays and return an array that does not contain elements 
+        from second array`, 
+        () => {
+            const input = [1.2, 4.4, 3.3];
+            const exclude = [4.2, 3.1];
+            const fn = Math.floor;
+            const output = lodash.differenceBy(input, exclude, fn);
+            const expected = [1.2];
+            expect(output).toEqual(expected);
     });
 
     /**
@@ -172,7 +173,7 @@ describe("testing of lodash.dropRightWhile method", () => {
 
     test(
         `test should return an empty array because predicate returns true for each element in array (age property is greater
-            than 18 in each object)`, 
+        than 18 in each object)`, 
         () => {
             const input = [
                 {
@@ -196,7 +197,7 @@ describe("testing of lodash.dropRightWhile method", () => {
 
     test(
         `test should return the first two elements of array when the length of array is 4 because 
-            the last two elements will be excluded`,
+        the last two elements will be excluded`,
         () => {
             const input = [
                 { user: 'Logan', active: true },
@@ -216,7 +217,7 @@ describe("testing of lodash.dropWhile method", () => {
 
     test(
         `test should return the same array as the input array because of 
-            predicate will return true for each element in the array`, 
+        predicate will return true for each element in the array`, 
         () => {
             const input = [
                 { count: 5 },
@@ -247,25 +248,85 @@ describe("testing of lodash.fill method", () => {
 
     test(
         `Test should mutate the input array, the last element should be the sign of '$'.
-            The start argument is equal to input.length - 1, the end argument is not passed`, () => {
-        const input = [1,2,3,4,5];
-        lodash.fill(input, "$", input.length - 1);
-        const expected = [1,2,3,4,'$'];
-        expect(input).toEqual(expected);
+        The start argument is equal to input.length - 1, the end argument is not passed`, 
+        () => {
+            const input = [1,2,3,4,5];
+            lodash.fill(input, "$", input.length - 1);
+            const expected = [1,2,3,4,'$'];
+            expect(input).toEqual(expected);
     });
 
-    test(`Test should fill the input array with the sign of '*' from the first element to the last because of the start and
-            end arguments are not passed`, () => {
-        const input = [100,200,300,400,500,600];
-        lodash.fill(input, "*");
-        const expected = new Array(input.length);
-        for ( let i = 0 ; i < expected.length ; i++ ) {
-            expected[i] = '*';
-        };
-        expect(input).toEqual(expected);
+    test(
+        `Test should fill the input array with the sign of '*' from the first element to the last because of the start and
+        end arguments are not passed`, 
+        () => {
+            const input = [100,200,300,400,500,600];
+            lodash.fill(input, "*");
+            const expected = new Array(input.length);
+            for ( let i = 0 ; i < expected.length ; i++ ) {
+                expected[i] = '*';
+            };
+            expect(input).toEqual(expected);
     });
 
 });
 
+describe("testing of lodash.findIndex method", () => {
 
+    test(
+        `Test should return 1 because of the passed predicate is object, so method should find 
+        the object in array that is equal to predicate`, 
+        () => {
+            const predicate = { x: 1, y:2 };
+            const input = [{x:2, y:1}, {x:1, y:2}, {x:100, y:200}];
+            const expected = 1;
+            const output = lodash.findIndex(input, predicate, 0);
+            expect(output).toEqual(expected);        
+    });
+
+    test(
+        `Test should return -1 because of predicate is equal to array with two values: 'name' and 'John'. So the method should
+        find in the input array the object which has property 'name' that is equal to 'John'. The input array doesn't have
+        such object`,
+        () => {
+            const predicate = ['name', 'John'];
+            const input = [{name: 'Mary', age: 20}, {name: 'Jonathan', age: 35}, {name: 'Oscar', age: 27}];
+            const expected = -1;
+            const output = lodash.findIndex(input, predicate, 0);
+            expect(output).toEqual(expected);
+    });
+
+    test(
+        `Test should return -1 because of the target element is located in the input array on the first position but the
+        searching is happening from the third position`,
+        () => {
+            const predicate = 'isAdmin';
+            const input = [
+                {
+                    name: 'Logan',
+                    isAdmin: true
+                },
+                {
+                    name: 'Andy',
+                    isAdmin: false
+                },
+                {
+                    name: 'Ann',
+                    isAdmin: false
+                },
+                {
+                    name: 'Charley',
+                    isAdmin: false
+                },
+                {
+                    name: 'Martin',
+                    isAdmin: false
+                }
+            ];
+            const expected = -1;
+            const output = lodash.findIndex(input, predicate, 2);
+            expect(output).toEqual(expected);
+        }
+    )
+});
 
