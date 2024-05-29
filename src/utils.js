@@ -59,6 +59,58 @@ const utils = {
             }
         }
         return -1;
+    },
+    matches(comparable, target) {
+        const keys = Object.keys(comparable);
+        for (let key in target) {
+            if (keys.findIndex((value) => value === key) === -1 || target[key] !== comparable[key]) {
+                return false;
+            }
+        }
+        return true;
+    },
+    matchesProperty(comparable, args) {
+        const [key, value] = args;
+        const keys = Object.keys(comparable);
+        if (keys.findIndex((value) => value === key) === -1 || comparable[key] !== value) {
+            return false;
+        }
+        return true;
+    },
+    getFnByPredicateType(predicate) {
+        const predicate_type = typeof predicate;
+        if (predicate_type === 'function') return predicate;
+        else if (predicate_type === 'string') return this.property;
+        else if (predicate_type === 'object') {
+            if (Array.isArray(predicate)) {
+                return this.matchesProperty;
+            } else {
+                return this.matches;
+            }
+        }
+    },
+    collectionsFindOrFindLast(collection, predicate, fromStart, fromIndex) {
+        const fn = this.getFnByPredicateType(predicate);
+        if (fromStart) {
+            for (; fromIndex < collection.length; fromIndex++) {
+                const curr = collection[fromIndex];
+                if (typeof predicate === 'function') {
+                    if (predicate(curr)) return curr;
+                } else {
+                    if (fn(curr, predicate)) return curr;
+                }
+            }
+        } else {
+            for (; fromIndex >= 0; fromIndex--) {
+                const curr = collection[fromIndex];
+                if (typeof predicate === 'function') {
+                    if (predicate(curr)) return curr;
+                } else {
+                    if (fn(curr, predicate)) return curr;
+                }
+            }
+        }
+		return undefined;
     }
 };
 
