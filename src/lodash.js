@@ -470,6 +470,157 @@ const lodash = {
 			result.push(resultValue);
 		}
 		return result;
+	},
+	without(array, exclude) {
+		const result = [];
+		const set = new Set(exclude);
+		for (let value of array) {
+			if (!set.has(value)) {
+				result.push(value);
+			}
+		}
+		return result;
+	},
+	xor(...arrays) {
+		const map = new Map();
+		for (let array of arrays) {
+			for (let value of array) {
+				map.has(value) ? map.set(value, map.get(value) + 1) : map.set(value, 1);
+			}
+		}
+		const result = [];
+		for (let [key, value] of map.entries()) {
+			if (value === 1) result.push(key);
+		}
+		return result;
+	},
+	zip(...arrays) {
+		const result = [];
+		const resultLength = arrays[0].length;
+		for (let i = 0; i < resultLength; i++) {
+			const current = [];
+			for (let array of arrays) {
+				current.push(array[i]);
+			}
+			result.push(current);
+		}
+		return result;
+	},
+	zipObject(props, values) {
+		const result = {};
+		for (let i = 0; i < props.length; i++) {
+			result[props[i]] = values[i];
+		}
+		return result;
+	},
+	zipObjectDeep(props, values) {
+		const recursiveObjBuilder = (obj, path, pointer, value) => {
+			if (pointer === path.length-1) {
+				obj[path[path.length-1]] = value;
+				return obj;
+			}
+			const openedParIdx = path[pointer].indexOf('[');
+			if (openedParIdx !== -1) {
+				const closedParIdx = path[pointer].indexOf(']');
+				const index = +(path[pointer].slice(openedParIdx+1, closedParIdx));
+				const prop = path[pointer].slice(0, openedParIdx);
+				obj[prop] = obj[prop]?.length > 0 ? [...obj[prop]] : [];
+				obj[prop][index] = {...obj[prop][index]};
+				recursiveObjBuilder(obj[prop][index], path, pointer+1, value);
+			} else {
+				obj[path[pointer]] = {...obj[path[pointer]]};
+				recursiveObjBuilder(obj[path[pointer]], path, pointer+1, value);
+			}
+		};
+		const result = {};
+		let path;
+		for (let i = 0; i < props.length; i++) {
+			path = props[i].split(".");
+			recursiveObjBuilder(result, path, 0, values[i]);
+		}
+		return result;
+	},
+	zipWith(...args) {
+		const iteratee = args.pop();
+		const result_size = args[0].length;
+		const result = [];
+		for (let i = 0; i < result_size; i++) {
+			result.push([]);
+		}
+		for (let i = 0; i < args.length; i++) {
+			for (let j = 0; j < args[i].length; j++) {
+				result[j].push(args[i][j]);
+			}	
+		}
+		for (let i = 0; i < result_size; i++) {
+			result[i] = iteratee(...result[i]);
+		}
+		return result;
+	},
+	countBy(collection, iteratee) {
+		const map = new Map();
+		let key;
+		if (typeof iteratee === 'string') {
+			for (let i = 0; i < collection.length; i++) {
+				key = collection[i];
+				if (map.has(key[iteratee])) {
+					map.set(key[iteratee], map.get(key[iteratee]) + 1);
+				} else {
+					map.set(key[iteratee], 1);
+				}
+			}
+		} else if (typeof iteratee === 'function') {
+			for (let i = 0; i < collection.length; i++) {
+				key = iteratee(collection[i]);
+				if (map.has(key)) {
+					map.set(key, map.get(key) + 1);
+				} else {
+					map.set(key, 1);
+				}
+			}
+		}
+		return Object.fromEntries(map.entries());
+	},
+	every(collection, predicate) {
+		if (collection.length === 0) {
+			return true;
+		}
+		const fn = utils.getFnByPredicateType(predicate);
+		for (let value of collection) {
+			if (typeof predicate === 'function') {
+				if (!predicate(value)) return false;
+			} else {
+				if (!fn(value, predicate)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	},
+	filter(collection, predicate) {
+		const result = [];
+		const fn = utils.getFnByPredicateType(predicate);
+		for (let value of collection) {
+			if (typeof predicate === 'function') {
+				if (predicate(value)) result.push(value);
+			} else {
+				if (fn(value, predicate)) result.push(value);
+			}
+		}
+		return result;
+	},
+	find(collection, predicate, fromIndex = 0) {
+		return utils.collectionsFindOrFindLast(collection, predicate, true, fromIndex);
+	},
+	findLast(collection, predicate, fromIndex = collection.length-1) {
+		return utils.collectionsFindOrFindLast(collection, predicate, false, fromIndex);
+	},
+	flatMap(collection, iteratee) {
+		const result = [];
+		for (let value of collection) {
+			result.push(...iteratee(value));
+		}
+		return result;
 	}
 };
 
